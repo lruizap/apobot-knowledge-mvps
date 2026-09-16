@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PersonalKnowledgeAI</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:900px;margin:40px auto;padding:0 20px;color:#202124;background:#f7f7f8}h1{margin-bottom:4px}p{color:#5f6368}.card{background:white;border:1px solid #ddd;border-radius:12px;padding:20px;box-shadow:0 2px 8px #0000000d}textarea{width:100%;min-height:110px;box-sizing:border-box;padding:12px;border:1px solid #bbb;border-radius:8px;font:inherit}button{margin-top:12px;padding:10px 18px;border:0;border-radius:8px;background:#315efb;color:white;font-weight:600;cursor:pointer}button:disabled{opacity:.6}#answer{white-space:pre-wrap;line-height:1.55;margin-top:20px}.sources{margin-top:18px;font-size:.95rem}.status{font-size:.9rem;color:#666;margin-top:10px}
+</style>
+</head>
+<body>
+<h1>PersonalKnowledgeAI</h1><p>Consulta local sobre tu bóveda de Obsidian.</p>
+<div class="card">
+<textarea id="question" placeholder="Escribe una pregunta sobre tus notas..."></textarea>
+<button id="send">Preguntar</button> <button id="index" style="background:#68707d">Reindexar bóveda</button><div class="status" id="status">Comprobando servicios...</div>
+<div id="answer"></div><div class="sources" id="sources"></div>
+</div>
+<script>
+const question=document.querySelector('#question'), send=document.querySelector('#send'), index=document.querySelector('#index'), status=document.querySelector('#status'), answer=document.querySelector('#answer'), sources=document.querySelector('#sources');
+index.onclick=async()=>{index.disabled=true;status.textContent='Indexando documentos y generando embeddings...';try{const r=await fetch('/api/knowledge/index',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const data=await r.json();if(!r.ok)throw new Error(data.detail||data.title||'Error de indexación');status.textContent='Indexados '+data.documents+' documentos y '+data.chunks+' fragmentos.';}catch(e){status.textContent='Error: '+e.message;}finally{index.disabled=false;}};
+async function loadHealth(){try{const [h,g]=await Promise.all([fetch("/api/knowledge/health"),fetch("/api/knowledge/graph")]);const health=await h.json(), graph=await g.json();status.textContent="Servicios: PostgreSQL/pgvector "+(health.backend||"-")+" · Neo4j "+(graph.connected?"conectado":"no disponible");}catch(e){status.textContent="No se pudo comprobar el estado de los servicios.";}}
+send.onclick=async()=>{const message=question.value.trim();if(!message)return;send.disabled=true;status.textContent='Buscando en la bóveda y consultando el modelo local...';answer.textContent='';sources.textContent='';try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,limit:5})});const data=await r.json();if(!r.ok)throw new Error(data.error||'Error en la API');answer.textContent=data.answer; sources.innerHTML=data.sources?.length?'<strong>Fuentes:</strong><ul>'+data.sources.map(x=>'<li><code>'+x+'</code></li>').join('')+'</ul>':'';status.textContent='Modelo: '+(data.model||'sin modelo');}catch(e){status.textContent='Error: '+e.message;}finally{send.disabled=false;}};
+loadHealth();
+question.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))send.click()});
+</script>
+</body>
+</html>
+
+
+

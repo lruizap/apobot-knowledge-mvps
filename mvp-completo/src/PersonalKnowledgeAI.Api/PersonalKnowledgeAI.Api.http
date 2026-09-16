@@ -1,0 +1,6 @@
+@PersonalKnowledgeAI.Api_HostAddress = http://localhost:5186
+
+GET {{PersonalKnowledgeAI.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,95 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5077:5077"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      KNOWLEDGE_VAULT_PATH: /app/manuals
+      OLLAMA_MODEL: qwen3:4b-instruct
+      OLLAMA_EMBEDDING_MODEL: qwen3-embedding:0.6b
+      OLLAMA_BASE_URL: http://ollama:11434
+      ConnectionStrings__Knowledge: Host=postgres;Port=5432;Database=personalknowledgeai;Username=knowledge;Password=knowledge_dev_only
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: knowledge_dev_only
+    depends_on:
+      ollama-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  ollama-init:
+    image: ollama/ollama:latest
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    depends_on:
+      ollama:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["for i in 1 2 3 4 5; do ollama pull qwen3:4b-instruct && ollama pull qwen3-embedding:0.6b && exit 0; sleep 15; done; exit 0"]
+    restart: on-failure
+
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: personalknowledgeai
+      POSTGRES_USER: knowledge
+      POSTGRES_PASSWORD: knowledge_dev_only
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knowledge -d personalknowledgeai"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/knowledge_dev_only
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  ollama-data:
+  postgres-data:
+  neo4j-data:
+  neo4j-logs:
+
+
+
+
+
+
+
+
