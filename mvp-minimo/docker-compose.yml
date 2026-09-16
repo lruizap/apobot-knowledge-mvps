@@ -6,9 +6,9 @@ services:
     ports: ["5087:5087"]
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__Cases: Host=postgres;Port=5432;Database=apobot;Username=apobot;Password=apobot_dev_only
+      ConnectionStrings__Cases: Host=postgres;Port=5432;Database=${POSTGRES_DB:-apobot};Username=${POSTGRES_USER:-apobot};Password=${POSTGRES_PASSWORD:-apobot_dev_only}
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: qwen3:4b-instruct
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:4b-instruct}
     depends_on:
       postgres: { condition: service_healthy }
       ollama-init: { condition: service_completed_successfully }
@@ -31,9 +31,9 @@ services:
   postgres:
     build: ./docker/postgres
     environment:
-      POSTGRES_DB: apobot
-      POSTGRES_USER: apobot
-      POSTGRES_PASSWORD: apobot_dev_only
+      POSTGRES_DB: ${POSTGRES_DB:-apobot}
+      POSTGRES_USER: ${POSTGRES_USER:-apobot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apobot_dev_only}
     ports: ["5447:5432"]
     volumes:
       - apobot-minimal-data:/var/lib/postgresql/data
@@ -45,6 +45,7 @@ services:
 volumes:
   apobot-minimal-data:
   ollama-data:
+
 
 
 
