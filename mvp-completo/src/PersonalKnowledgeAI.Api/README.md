@@ -1,6 +1,6 @@
 # PersonalKnowledgeAI.Api
 
-API local del MVP para buscar conocimiento en la boveda de Obsidian.
+API local del MVP para buscar conocimiento en los documentos del proyecto.
 
 ## Ejecutar
 
@@ -15,4 +15,5 @@ dotnet run --project src/PersonalKnowledgeAI.Api --urls http://127.0.0.1:5077
 - `GET /api/knowledge/health`
 - `GET /api/knowledge/search?q=memoria&limit=5`
 
-La API busca archivos `.md` en la raiz de la boveda e ignora `.obsidian`, `.git`, `bin` y `obj`.
+La API busca archivos `.md` en el directorio configurado e ignora `.git`, `bin` y `obj`.
+
