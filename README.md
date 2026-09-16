@@ -90,3 +90,4 @@ Invoke-RestMethod 'http://localhost:5087/api/manuals?q=KG%2B'
 - [Comparativa técnica extensa](COMPARATIVA-MVP.md)
 - [Informe técnico](docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf)
 
+
