@@ -11,7 +11,7 @@ services:
       OLLAMA_MODEL: qwen3:4b-instruct
     depends_on:
       postgres: { condition: service_healthy }
-      ollama: { condition: service_healthy }
+      ollama-init: { condition: service_completed_successfully }
   ollama:
     image: ollama/ollama:latest
     volumes: [ollama-data:/root/.ollama]
@@ -45,5 +45,6 @@ services:
 volumes:
   apobot-minimal-data:
   ollama-data:
+
 
 
