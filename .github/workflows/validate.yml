@@ -1,0 +1,39 @@
+name: Validate MVPs
+on:
+  push:
+  pull_request:
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose files
+        run: |
+          docker compose -f mvp-minimo/docker-compose.yml config --quiet
+          docker compose -f mvp-completo/docker-compose.yml config --quiet
+      - name: Check required files
+        shell: bash
+        run: |
+          test -f COSTES-PROYECTO.md
+          test -f COMPARATIVA-MVP.md
+          test -f docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf
+          test -f mvp-minimo/manuals/Guia_por_averias_orden_parametrizacion_S_B_P.pdf
+          test -f mvp-completo/manuals/Guia_por_averias_orden_parametrizacion_S_B_P.pdf
+      - name: Check documentation scope
+        shell: bash
+        run: '! grep -Rni --include="*.md" "obsidian" .'
+  dotnet:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project:
+          - mvp-minimo/src/ApobotMinimal.Api/ApobotMinimal.Api.csproj
+          - mvp-completo/src/PersonalKnowledgeAI.Api/PersonalKnowledgeAI.Api.csproj
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore ${{ matrix.project }}
+      - run: dotnet build ${{ matrix.project }} --configuration Release --no-restore

@@ -13,7 +13,7 @@ services:
       postgres: { condition: service_healthy }
       ollama-init: { condition: service_completed_successfully }
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.11.10
     volumes: [ollama-data:/root/.ollama]
     healthcheck:
       test: ["CMD", "ollama", "list"]
@@ -21,7 +21,7 @@ services:
       timeout: 5s
       retries: 12
   ollama-init:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.11.10
     environment: { OLLAMA_HOST: http://ollama:11434 }
     depends_on:
       ollama: { condition: service_healthy }
@@ -45,6 +45,7 @@ services:
 volumes:
   apobot-minimal-data:
   ollama-data:
+
 
 
 

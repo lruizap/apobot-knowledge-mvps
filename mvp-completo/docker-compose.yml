@@ -26,7 +26,7 @@ services:
         condition: service_healthy
 
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.11.10
     ports:
       - "11434:11434"
     volumes:
@@ -38,7 +38,7 @@ services:
       retries: 12
 
   ollama-init:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.11.10
     environment:
       OLLAMA_HOST: http://ollama:11434
     depends_on:
@@ -49,7 +49,7 @@ services:
     restart: "no"
 
   postgres:
-    image: pgvector/pgvector:pg17
+    image: pgvector/pgvector:0.8.0-pg17
     environment:
       POSTGRES_DB: personalknowledgeai
       POSTGRES_USER: knowledge
@@ -65,7 +65,7 @@ services:
       retries: 12
 
   neo4j:
-    image: neo4j:5-community
+    image: neo4j:5.26-community
     environment:
       NEO4J_AUTH: neo4j/knowledge_dev_only
       NEO4J_server_memory_heap_initial__size: 256m
@@ -87,6 +87,7 @@ volumes:
   postgres-data:
   neo4j-data:
   neo4j-logs:
+
 
 
 

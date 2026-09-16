@@ -136,12 +136,27 @@ OLLAMA_EMBEDDING_MODEL=qwen3-embedding:0.6b
 Ollama y los modelos se ejecutan localmente sin coste por petición. Sí existe coste operativo: CPU/GPU, RAM, disco y electricidad. `qwen3:4b-instruct` se ha escogido para mantener bajos esos requisitos; una GPU compatible puede reducir la latencia, pero no es necesaria para validar el flujo. El volumen de Ollama puede ocupar varios GB y debe conservarse si se quieren evitar nuevas descargas.
 
 Referencias: [Ollama](https://ollama.com/), [biblioteca de modelos](https://ollama.com/library).
+
+## Estado para revisión
+
+| Área | Estado |
+|---|---|
+| MVP mínimo | Funcional |
+| MVP completo | Prototipo funcional |
+| Ollama integrado en Docker | Implementado |
+| Validación Compose | Automatizada |
+| Build de ambas APIs | Automatizado en GitHub Actions |
+| Smoke tests | Disponibles en `scripts/` |
+| Uso en producción | Pendiente de hardening, secretos y observabilidad |
+
+`cases` en el MVP mínimo queda preparado para registrar casos técnicos validados en una fase posterior; no participa todavía en la recuperación del manual.
 ## Documentación
 
 - [Guía del MVP completo](mvp-completo/README.md)
 - [Guía del MVP mínimo](mvp-minimo/README.md)
 - [Comparativa técnica extensa](COMPARATIVA-MVP.md)
 - [Informe técnico](docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf)`r`n- [Costes técnicos del proyecto](COSTES-PROYECTO.md)
+
 
 
 
