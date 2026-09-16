@@ -83,11 +83,99 @@ Invoke-RestMethod 'http://localhost:5087/api/manuals?q=KG%2B'
 - Si aparecen datos antiguos, usar `docker compose down -v` en el MVP afectado.
 - Las credenciales incluidas son sólo para desarrollo local.
 
+## Ollama: instalación, modelo y ejecución
+
+### Qué es Ollama
+
+Ollama es un runtime local que descarga y ejecuta modelos de lenguaje en el propio equipo y expone una API HTTP. En estos MVP permite procesar el manual sin enviarlo a un proveedor externo ni pagar por tokens. El coste real es hardware, memoria, almacenamiento y electricidad.
+
+### Modelo elegido y para qué sirve
+
+El modelo de generación elegido es `qwen3:4b-instruct`. Ofrece un equilibrio adecuado entre calidad, consumo y latencia para un prototipo técnico. Sigue instrucciones, sintetiza respuestas breves a partir de fragmentos recuperados y permite limitar temperatura y longitud para reducir desviaciones.
+
+El modelo no es la fuente de verdad: sólo redacta usando el contexto recuperado desde PostgreSQL. Si el contexto no responde, la aplicación debe indicar que no hay información suficiente.
+
+El `mvp-completo` utiliza además `qwen3-embedding:0.6b` para convertir fragmentos y preguntas en vectores de búsqueda. El `mvp-minimo` sólo usa `qwen3:4b-instruct`; recupera mediante SQL full-text.
+
+### Instalación nativa
+
+1. Descargar e instalar Ollama desde [ollama.com/download](https://ollama.com/download).
+2. Verificar la instalación:
+
+```powershell
+ollama --version
+ollama list
+```
+
+3. Descargar el modelo de generación:
+
+```powershell
+ollama pull qwen3:4b-instruct
+```
+
+4. Para el MVP completo, descargar también embeddings:
+
+```powershell
+ollama pull qwen3-embedding:0.6b
+```
+
+5. Ejecutar una prueba interactiva:
+
+```powershell
+ollama run qwen3:4b-instruct
+```
+
+La API local suele estar en `http://localhost:11434`. Comprobarla con:
+
+```powershell
+Invoke-RestMethod http://localhost:11434/api/tags
+```
+
+### Ejecución con Docker Compose
+
+No es obligatorio instalar Ollama nativamente. Cada Compose crea un servicio `ollama` y un `ollama-init` que descarga los modelos.
+
+```powershell
+cd mvp-completo
+docker compose up --build
+```
+
+O bien:
+
+```powershell
+cd mvp-minimo
+docker compose up --build
+```
+
+Dentro de Docker, la API usa `http://ollama:11434`; fuera de Docker se utiliza `http://127.0.0.1:11434`. Consultar estado y logs:
+
+```powershell
+docker compose ps
+docker compose exec ollama ollama list
+docker compose logs -f ollama-init
+```
+
+Si Ollama aún está descargando, esperar a que termine `ollama-init`. El mínimo dispone de fallback extractivo; el completo necesita el embedding disponible para indexar vectores.
+
+### Configuración
+
+```text
+OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_MODEL=qwen3:4b-instruct
+OLLAMA_EMBEDDING_MODEL=qwen3-embedding:0.6b
+```
+
+### Costes y rendimiento
+
+Ollama y los modelos se ejecutan localmente sin coste por petición. Sí existe coste operativo: CPU/GPU, RAM, disco y electricidad. `qwen3:4b-instruct` se ha escogido para mantener bajos esos requisitos; una GPU compatible puede reducir la latencia, pero no es necesaria para validar el flujo. El volumen de Ollama puede ocupar varios GB y debe conservarse si se quieren evitar nuevas descargas.
+
+Referencias: [Ollama](https://ollama.com/), [biblioteca de modelos](https://ollama.com/library).
 ## Documentación
 
 - [Guía del MVP completo](mvp-completo/README.md)
 - [Guía del MVP mínimo](mvp-minimo/README.md)
 - [Comparativa técnica extensa](COMPARATIVA-MVP.md)
 - [Informe técnico](docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf)
+
 
 
