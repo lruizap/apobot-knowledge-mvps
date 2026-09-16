@@ -97,40 +97,6 @@ El modelo no es la fuente de verdad: sólo redacta usando el contexto recuperado
 
 El `mvp-completo` utiliza además `qwen3-embedding:0.6b` para convertir fragmentos y preguntas en vectores de búsqueda. El `mvp-minimo` sólo usa `qwen3:4b-instruct`; recupera mediante SQL full-text.
 
-### Instalación nativa
-
-1. Descargar e instalar Ollama desde [ollama.com/download](https://ollama.com/download).
-2. Verificar la instalación:
-
-```powershell
-ollama --version
-ollama list
-```
-
-3. Descargar el modelo de generación:
-
-```powershell
-ollama pull qwen3:4b-instruct
-```
-
-4. Para el MVP completo, descargar también embeddings:
-
-```powershell
-ollama pull qwen3-embedding:0.6b
-```
-
-5. Ejecutar una prueba interactiva:
-
-```powershell
-ollama run qwen3:4b-instruct
-```
-
-La API local suele estar en `http://localhost:11434`. Comprobarla con:
-
-```powershell
-Invoke-RestMethod http://localhost:11434/api/tags
-```
-
 ### Ejecución con Docker Compose
 
 No es obligatorio instalar Ollama nativamente. Cada Compose crea un servicio `ollama` y un `ollama-init` que descarga los modelos.
@@ -147,7 +113,7 @@ cd mvp-minimo
 docker compose up --build
 ```
 
-Dentro de Docker, la API usa `http://ollama:11434`; fuera de Docker se utiliza `http://127.0.0.1:11434`. Consultar estado y logs:
+Dentro de Docker, la API usa `http://ollama:11434`; no es necesario instalar ni ejecutar Ollama fuera de Docker. Consultar estado y logs:
 
 ```powershell
 docker compose ps
@@ -176,6 +142,7 @@ Referencias: [Ollama](https://ollama.com/), [biblioteca de modelos](https://olla
 - [Guía del MVP mínimo](mvp-minimo/README.md)
 - [Comparativa técnica extensa](COMPARATIVA-MVP.md)
 - [Informe técnico](docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf)
+
 
 
 
