@@ -141,7 +141,8 @@ Referencias: [Ollama](https://ollama.com/), [biblioteca de modelos](https://olla
 - [Guía del MVP completo](mvp-completo/README.md)
 - [Guía del MVP mínimo](mvp-minimo/README.md)
 - [Comparativa técnica extensa](COMPARATIVA-MVP.md)
-- [Informe técnico](docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf)
+- [Informe técnico](docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf)`r`n- [Costes técnicos del proyecto](COSTES-PROYECTO.md)
+
 
 
 
