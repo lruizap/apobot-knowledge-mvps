@@ -9,7 +9,7 @@ Valida el valor de hacer preguntas sobre el manual con la mínima infraestructur
 - Búsqueda textual por términos.
 - Ollama `qwen3:4b-instruct` para sintetizar.
 - Respuestas breves con `Fuente: ...#page=N`.
-- Sin Obsidian, Neo4j, pgvector, Graphiti, Zep ni casos inventados.
+- Sin Neo4j, pgvector, Graphiti, Zep ni casos inventados.
 
 ## Arranque
 

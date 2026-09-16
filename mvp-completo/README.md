@@ -2,7 +2,7 @@
 
 ## Enfoque
 
-Este MVP conserva la arquitectura avanzada del proyecto original, pero elimina la dependencia de Obsidian. La única fuente documental es `manuals/Guia_por_averias_orden_parametrizacion_S_B_P.pdf`, convertida a Markdown para que la API la indexe.
+Este MVP conserva una arquitectura avanzada. La única fuente documental es `manuals/Guia_por_averias_orden_parametrizacion_S_B_P.pdf`, convertida a Markdown para que la API la indexe.
 
 Está pensado para comparar una solución con más infraestructura y posibilidades de evolución:
 
