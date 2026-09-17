@@ -26,7 +26,7 @@ services:
         condition: service_healthy
 
   ollama:
-    image: ollama/ollama:0.11.10
+    image: ollama/ollama:0.34.1
     ports:
       - "11434:11434"
     volumes:
@@ -38,18 +38,20 @@ services:
       retries: 12
 
   ollama-init:
-    image: ollama/ollama:0.11.10
+    image: ollama/ollama:0.34.1
     environment:
       OLLAMA_HOST: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:4b-instruct}
+      OLLAMA_EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-qwen3-embedding:0.6b}
     depends_on:
       ollama:
         condition: service_healthy
     entrypoint: ["/bin/sh", "-c"]
-    command: ["for i in 1 2 3 4 5 6 7 8; do ollama pull qwen3:4b-instruct && ollama pull qwen3-embedding:0.6b && exit 0; sleep 15; done; exit 1"]
+    command: ["for i in 1 2 3 4 5 6 7 8; do ollama pull \"$${OLLAMA_MODEL}\" && ollama pull \"$${OLLAMA_EMBEDDING_MODEL}\" && exit 0; sleep 15; done; exit 1"]
     restart: "no"
 
   postgres:
-    image: pgvector/pgvector:0.8.0-pg17
+    build: ./docker/postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-personalknowledgeai}
       POSTGRES_USER: ${POSTGRES_USER:-knowledge}
@@ -87,15 +89,4 @@ volumes:
   postgres-data:
   neo4j-data:
   neo4j-logs:
-
-
-
-
-
-
-
-
-
-
-
 
