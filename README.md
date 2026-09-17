@@ -11,7 +11,7 @@ Dos implementaciones independientes para consultar exclusivamente la guía técn
 
 ## Requisitos
 
-Docker Desktop con Compose v2, 8 GB de RAM y conexión a Internet para descargar las imágenes y `qwen3:4b-instruct`.
+Docker Desktop con Compose v2, 8 GB de RAM y conexión a Internet para descargar las imágenes y `qwen3:1.7b`.
 
 ```powershell
 docker --version
@@ -91,11 +91,11 @@ Ollama es un runtime local que descarga y ejecuta modelos de lenguaje en el prop
 
 ### Modelo elegido y para qué sirve
 
-El modelo de generación elegido es `qwen3:4b-instruct`. Ofrece un equilibrio adecuado entre calidad, consumo y latencia para un prototipo técnico. Sigue instrucciones, sintetiza respuestas breves a partir de fragmentos recuperados y permite limitar temperatura y longitud para reducir desviaciones.
+El modelo de generación elegido es `qwen3:1.7b`. Ofrece un equilibrio adecuado entre calidad, consumo y latencia para un prototipo técnico. Sigue instrucciones, sintetiza respuestas breves a partir de fragmentos recuperados y permite limitar temperatura y longitud para reducir desviaciones.
 
 El modelo no es la fuente de verdad: sólo redacta usando el contexto recuperado desde PostgreSQL. Si el contexto no responde, la aplicación debe indicar que no hay información suficiente.
 
-El `mvp-completo` utiliza además `qwen3-embedding:0.6b` para convertir fragmentos y preguntas en vectores de búsqueda. El `mvp-minimo` sólo usa `qwen3:4b-instruct`; recupera mediante SQL full-text.
+El `mvp-completo` utiliza además `qwen3-embedding:0.6b` para convertir fragmentos y preguntas en vectores de búsqueda. El `mvp-minimo` sólo usa `qwen3:1.7b`; recupera mediante SQL full-text.
 
 ### Ejecución con Docker Compose
 
@@ -127,13 +127,13 @@ Si Ollama aún está descargando, esperar a que termine `ollama-init`. El mínim
 
 ```text
 OLLAMA_BASE_URL=http://ollama:11434
-OLLAMA_MODEL=qwen3:4b-instruct
+OLLAMA_MODEL=qwen3:1.7b
 OLLAMA_EMBEDDING_MODEL=qwen3-embedding:0.6b
 ```
 
 ### Costes y rendimiento
 
-Ollama y los modelos se ejecutan localmente sin coste por petición. Sí existe coste operativo: CPU/GPU, RAM, disco y electricidad. `qwen3:4b-instruct` se ha escogido para mantener bajos esos requisitos; una GPU compatible puede reducir la latencia, pero no es necesaria para validar el flujo. El volumen de Ollama puede ocupar varios GB y debe conservarse si se quieren evitar nuevas descargas.
+Ollama y los modelos se ejecutan localmente sin coste por petición. Sí existe coste operativo: CPU/GPU, RAM, disco y electricidad. `qwen3:1.7b` se ha escogido para mantener bajos esos requisitos; una GPU compatible puede reducir la latencia, pero no es necesaria para validar el flujo. El volumen de Ollama puede ocupar varios GB y debe conservarse si se quieren evitar nuevas descargas.
 
 Referencias: [Ollama](https://ollama.com/), [biblioteca de modelos](https://ollama.com/library).
 
@@ -156,9 +156,3 @@ Referencias: [Ollama](https://ollama.com/), [biblioteca de modelos](https://olla
 - [Guía del MVP mínimo](mvp-minimo/README.md)
 - [Comparativa técnica extensa](COMPARATIVA-MVP.md)
 - [Informe técnico](docs/Informe_Tecnico_IA_Memoria_APObot_v2.pdf)`r`n- [Costes técnicos del proyecto](COSTES-PROYECTO.md)
-
-
-
-
-
-
