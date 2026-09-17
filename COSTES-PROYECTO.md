@@ -68,7 +68,7 @@ Los servicios no necesariamente consumen el máximo simultáneamente, pero Ollam
 El coste de datos del manual es pequeño. El consumo importante procede de imágenes Docker y modelos Ollama. Deben presupuestarse:
 
 - Imágenes base de .NET, PostgreSQL, pgvector, Neo4j y Ollama.
-- Modelo de generación `qwen3:4b-instruct`.
+- Modelo de generación `qwen3:1.7b`.
 - Modelo `qwen3-embedding:0.6b` sólo en el completo.
 - Volúmenes PostgreSQL y Neo4j.
 - Logs, capas de build y cachés.

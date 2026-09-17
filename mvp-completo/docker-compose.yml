@@ -10,7 +10,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       KNOWLEDGE_VAULT_PATH: /app/manuals
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:4b-instruct}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:1.7b}
       OLLAMA_EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-qwen3-embedding:0.6b}
       OLLAMA_BASE_URL: http://ollama:11434
       ConnectionStrings__Knowledge: Host=postgres;Port=5432;Database=personalknowledgeai;Username=knowledge;Password=knowledge_dev_only
@@ -41,7 +41,7 @@ services:
     image: ollama/ollama:0.34.1
     environment:
       OLLAMA_HOST: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:4b-instruct}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:1.7b}
       OLLAMA_EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-qwen3-embedding:0.6b}
     depends_on:
       ollama:
@@ -89,4 +89,3 @@ volumes:
   postgres-data:
   neo4j-data:
   neo4j-logs:
-

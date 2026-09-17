@@ -8,7 +8,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Cases: Host=postgres;Port=5432;Database=${POSTGRES_DB:-apobot};Username=${POSTGRES_USER:-apobot};Password=${POSTGRES_PASSWORD:-apobot_dev_only}
       OLLAMA_BASE_URL: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:4b-instruct}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:1.7b}
     depends_on:
       postgres: { condition: service_healthy }
       ollama-init: { condition: service_completed_successfully }
@@ -24,7 +24,7 @@ services:
     image: ollama/ollama:0.34.1
     environment:
       OLLAMA_HOST: http://ollama:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:4b-instruct}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:1.7b}
     depends_on:
       ollama: { condition: service_healthy }
     entrypoint: ["/bin/sh", "-c"]
@@ -47,4 +47,3 @@ services:
 volumes:
   apobot-minimal-data:
   ollama-data:
-

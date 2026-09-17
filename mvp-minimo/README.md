@@ -31,7 +31,7 @@ Proporciona API HTTP, hosting y tipado fuerte con una distribución sencilla. Fr
 
 Es la única fuente de verdad operativa. `manual_chunks` conserva página, sección, contenido y fuente. Los índices GIN permiten búsquedas full-text sin un motor adicional. Frente al completo evita pgvector, tablas de embeddings y tuning vectorial, a cambio de depender más de las palabras de la pregunta.
 
-### Ollama y `qwen3:4b-instruct`
+### Ollama y `qwen3:1.7b`
 
 Genera respuestas breves usando el contexto recuperado. Se ejecuta localmente y no cobra por petición; el coste es computacional. Frente al completo se usa para síntesis, pero no para embeddings, por lo que descarga, RAM y tiempo de indexación son menores.
 

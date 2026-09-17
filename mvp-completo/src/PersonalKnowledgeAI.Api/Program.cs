@@ -51,7 +51,7 @@ record IndexResult(int Documents, int Chunks, int Embedded, string VaultPath);
 sealed class OllamaClient
 {
     private readonly HttpClient _http;
-    public string Model { get; } = Environment.GetEnvironmentVariable("OLLAMA_MODEL") ?? "qwen3:4b-instruct";
+    public string Model { get; } = Environment.GetEnvironmentVariable("OLLAMA_MODEL") ?? "qwen3:1.7b";
     public string EmbeddingModel { get; } = Environment.GetEnvironmentVariable("OLLAMA_EMBEDDING_MODEL") ?? "qwen3-embedding:0.6b";
     public OllamaClient(HttpClient http) => _http = http;
 
@@ -210,13 +210,3 @@ sealed class KnowledgeIndexer
     private static async Task EnsureSchemaAsync(NpgsqlConnection c, CancellationToken ct) { await using var q = new NpgsqlCommand("CREATE EXTENSION IF NOT EXISTS vector; CREATE TABLE IF NOT EXISTS knowledge_documents (id BIGSERIAL PRIMARY KEY, path TEXT NOT NULL UNIQUE, title TEXT NOT NULL, content TEXT NOT NULL, metadata JSONB NOT NULL DEFAULT '{}'::jsonb, content_hash TEXT NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT now()); CREATE INDEX IF NOT EXISTS knowledge_documents_content_fts ON knowledge_documents USING GIN (to_tsvector('simple', content)); CREATE TABLE IF NOT EXISTS knowledge_chunks (id BIGSERIAL PRIMARY KEY, document_path TEXT NOT NULL, chunk_index INTEGER NOT NULL, content TEXT NOT NULL, metadata JSONB NOT NULL DEFAULT '{}'::jsonb, content_hash TEXT NOT NULL, embedding vector(1024), updated_at TIMESTAMPTZ NOT NULL DEFAULT now(), UNIQUE(document_path,chunk_index)); CREATE INDEX IF NOT EXISTS knowledge_chunks_embedding_idx ON knowledge_chunks USING hnsw (embedding vector_cosine_ops);", c); await q.ExecuteNonQueryAsync(ct); }
     private static IEnumerable<string> Chunk(string content) { const int size = 1200, overlap = 150; if (string.IsNullOrWhiteSpace(content)) yield break; for (var start = 0; start < content.Length; start += size - overlap) { yield return content[start..Math.Min(content.Length, start + size)]; if (start + size >= content.Length) break; } }
 }
-
-
-
-
-
-
-
-
-
-
